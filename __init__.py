@@ -76,45 +76,38 @@ class RUManager():
         #websocket listeners
         self.rhapi.ui.socket_listen("get_pilot_photo", self.handleGetPilotPhoto)
 
-        rhapi.events.on(Evt.HEAT_SET, self.handleGetPilotPhotos)
-
-    def handleGetPilotPhotos(self, args):
-        log("heat_set")
-        log(args)
-        heat = self.rhapi.db.heat_by_id(args["heat_id"])
-        log("heat: "+str(heat))
-        slots = self.rhapi.db.slots_by_heat(args["heat_id"])
-        
-        log("slots: "+str(slots))
-        for slot in slots:
-            log("slot: "+str(slot.node_index))
-            pilotId = slot.pilot_id
-            if(pilotId!=0 and pilotId!=None):
-                self.sendPhotoURLByPilotId(pilotId, slot.node_index)
-
     def handleGetPilotPhoto(self, args):
+        log(args)
         node = int(args["node"])
-        pilotId = self.rhapi.race.pilots[node]
-        if(pilotId!=0 and pilotId!=None):
-            self.sendPhotoURLByPilotId(pilotId, node)
+        if(len(self.rhapi.race.pilots)-1>=node):
+            pilotId = self.rhapi.race.pilots[node]
+        else:
+            pilotId = None
+        self.sendPhotoURLByPilotId(pilotId, node)
 
     def sendPhotoURLByPilotId(self, pilotId, node):
-        pilotPhotoURL = self.rhapi.db.pilot_attribute_value(pilotId, PILOT_URL_FIELD_NAME)
-        secondaryColor = self.rhapi.db.pilot_attribute_value(pilotId, PILOT_SECONDARY_COLOR_FIELD_NAME)
-        
+        if(pilotId!=None):
+            pilotPhotoURL = self.rhapi.db.pilot_attribute_value(pilotId, PILOT_URL_FIELD_NAME)
+            secondaryColor = self.rhapi.db.pilot_attribute_value(pilotId, PILOT_SECONDARY_COLOR_FIELD_NAME)
+        else:
+            pilotPhotoURL = ""
+            secondaryColor = "#000000"
         #if the secondary color is invalid, use the primary color
         if(self.isValidHexColor(secondaryColor)==False):
             seatColor = self.rhapi.race.seat_colors[node]
             seatColor = self.colorToHex(seatColor)
             secondaryColor = seatColor
         
-        log(pilotPhotoURL)
-        pilot = self.rhapi.db.pilot_by_id(pilotId)
-        if(pilot!=None):
+        log("url: "+str(pilotPhotoURL))
+        log("pilotId: "+str(pilotId))
+        if(pilotId!=None and pilotId!=0):
+            pilot = self.rhapi.db.pilot_by_id(pilotId)
             callsign = pilot.callsign
-            body = {"callsign":callsign, "url": pilotPhotoURL, "node": node, "secondaryColor": secondaryColor}
-            log("-> "+str(body))
-            self.rhapi.ui.socket_broadcast("pilot_photo", body)
+        else:
+            callsign = None
+        body = {"callsign":callsign, "url": pilotPhotoURL, "node": node, "secondaryColor": secondaryColor}
+        log("-> "+str(body))
+        self.rhapi.ui.socket_broadcast("pilot_photo", body)
 
     def colorToHex(self, colorInt):
         return '#' + format(colorInt, '06x')

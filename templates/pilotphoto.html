@@ -13,11 +13,10 @@
 	rotorhazard.show_messages = false;
 	streamnode = {{ node_id }}
 
+	
+
 	$(document).ready(function () {
 		rotorhazard.show_messages = false;
-		console.log("GOT NODE: "+JSON.stringify(streamnode))
-
-		socket.emit('get_pilot_photo', {'node': streamnode});
 
 		socket.on('language', function (msg) {
 			if (msg.language) {
@@ -25,8 +24,9 @@
 			}
 		});
 
-
 		socket.on('current_heat', function (msg) {
+			hidePilotCard();
+			socket.emit('get_pilot_photo', {'node': streamnode});
 			for (var idx in msg.heatNodes) {
 				hn = msg.heatNodes[streamnode];
 				if (hn.activeColor) {
@@ -50,141 +50,72 @@
 
         socket.on('pilot_photo', function (msg) {
 			if(msg.node==streamnode) {
-				console.log("got pilot photo");
-				console.log(msg);
+
 				setPilotImageURL(msg.callsign, msg.url, msg.secondaryColor);
 			}
+
+			showPilotCard();
 		});
 
-		socket.on('current_laps', function (msg) {
-			current_laps = msg.current;
-			show_current_laps();
-		});
-
-		function show_current_laps() {
-			var i = streamnode;
-			var node_index = current_laps.node_index[streamnode];
-
-			$('#current_laps tr').remove();
-
-			display_laps = node_index.laps
-			while (display_laps.length > 10) {
-				display_laps.shift();
-			}
-
-			$.each(display_laps, function (j, lap) { // j is loop num, lap is json object
-				var tr = '';
-				var lapTime = lap.lap_time;
-				if (lap.splits.length > 0) {
-					lapTime += ' (';
-					for (k=0; k<lap.splits.length; k++) {
-						var split = lap.splits[k];
-						if (k > 0) {
-							lapTime += ', ';
-						}
-						lapTime += split.split_time;
-						if (split.split_speed) {
-							lapTime += '/' + split.split_speed;
-						}
-					}
-					lapTime += ')';
-				}
-
-				tr = $('<tr>')
-				if (lap.lap_number == 0) {
-					tr.addClass('lap_0');
-					lap.lap_number = __('HS');
-				}
-
-				if (lap.lap_index == node_index.fastest_lap_index) {
-					tr.addClass('fastest_lap');
-				}
-
-				tr.append(
-					$('<td class="display_lap_number">').text(lap.lap_number + ":")
-				);
-				$time_td = $('<td>').text(lap.lap_time + ' ');
-				$local_prepend = $('<span class="from_start">');
-
-				$time_td.prepend($local_prepend);
-				tr.append($time_td);
-
-				if (j && lap.lap_raw < (rotorhazard.min_lap * 1000)) {
-					tr.addClass('min-lap-warning');
-				}
-				if (!rotorhazard.race_formats.race_mode && lap.lap_time_stamp > (rotorhazard.race_formats.race_time_sec * 1000)) {
-					tr.addClass('after-time-expired');
-				}
-				tr.appendTo('#current_laps');
-			});
+		function hidePilotCard(){
+			//document.getElementsByClassName('pilot-card')[0].style.visibility = 'hidden';
+			$('.pilot-card').css('visibility', 'hidden');
+			//$('.pilot-picture').css('visibility', 'hidden');
+			$('.callsign').html("");
+			$('html').css('--pilot_second_color', "#000000");
+			$('.pilot-card').removeClass('fadeInUp');
+			$('.pilot-card').removeClass('animatedFadeInUp');
+			$('.pilot-card').removeClass('animated');
 		}
 
-		function setPilotImage(pilotName){
-			var callsign = pilotName;
-			if(callsign!=null){
-
-				var pilotPicURL = 'https://res.cloudinary.com/street-league-spec/image/upload/c_thumb,h_380,w_380/pilot-photos/'+callsign;
-				var unknownPicURL = 'https://res.cloudinary.com/street-league-spec/image/upload/q_80,w_100,h_100,c_thumb,g_faces/v1659422654/pilot-photos/unknownPilot.jpg';
-
-				function checkImage(imageSrc, good, bad) {
-							var img = new Image();
-							img.onload = good;
-							img.onerror = bad;
-							img.src = imageSrc;
-							console.log("loading profile pic: "+imageSrc);
-				}
-
-				checkImage(pilotPicURL, function(){
-
-				}, function(){
-					$('.pilot-picture').attr({
-						'src':unknownPicURL
-					});
-					console.log("could not find pilot profile picture for "+callsign);
-				});
-
-				$('#pilot-info').css('visibility', 'visible');
-				$('.pilot-picture').attr('src', pilotPicURL);
-				$('.callsign').html(callsign).css("font-size", "60px");
-				}
+		function showPilotCard(){
+			//document.getElementsByClassName('pilot-card')[0].style.visibility = 'visible';
+			$('.pilot-card').css('visibility', 'visible');
+			//$('.pilot-picture').css('visibility', 'visible');
+			$('.pilot-card').addClass('fadeInUp');
+			$('.pilot-card').addClass('animatedFadeInUp');
+			$('.pilot-card').addClass('animated');
 		}
 
 		function setPilotImageURL(pilotName, imageURL, secondaryColor){
 			var callsign = pilotName;
-			if(callsign!=null){
+			//if(callsign!=null){
 
-				var pilotPicURL = imageURL;
-				var unknownPicURL = '/pilotphotos/static/images/unknown_pilot.jpg';
+			var pilotPicURL = imageURL;
+			var unknownPicURL = '/pilotphotos/static/images/unknown_pilot.jpg';
 
-				function checkImage(imageSrc, good, bad) {
-							var img = new Image();
-							img.onload = good;
-							img.onerror = bad;
-							img.src = imageSrc;
-							console.log("loading profile pic: "+imageSrc);
-				}
+			function checkImage(imageSrc, good, bad) {
+						var img = new Image();
+						img.onload = good;
+						img.onerror = bad;
+						img.src = imageSrc;
+						console.log("loading profile pic: "+imageSrc);
+			}
 
-				checkImage(pilotPicURL, function(){
+			checkImage(pilotPicURL, function(){
 
-				}, function(){
-					$('.pilot-picture').attr({
-						'src':unknownPicURL
-					});
-					console.log("could not find pilot profile picture for "+callsign);
+			}, function(){
+				$('.pilot-picture').attr({
+					'src':unknownPicURL
 				});
+			});
 
-
-				$('html').css('--pilot_second_color', secondaryColor);
-
-
-
-				$('#pilot-info').css('visibility', 'visible');
-				$('.pilot-picture').attr('src', pilotPicURL);
-				$('.callsign').html(callsign).css("font-size", "60px");
-				}
+			$('html').css('--pilot_second_color', secondaryColor);
+			$('#pilot-info').css('visibility', 'visible');
+			$('.pilot-picture').attr('src', pilotPicURL);
+			$('.callsign').html(callsign);
+			if(callsign == null){
+				$('.pilot-picture').css('visibility', 'hidden');
+			}else{
+				$('.pilot-picture').css('visibility', 'visible');
+			}
+			//}
 		}
 
 		socket.on('leaderboard', function (msg) {
+
+			hidePilotCard();
+			socket.emit('get_pilot_photo', {'node': streamnode});
 			var race = msg.current.leaderboard;
 
 			primary_leaderboard = race.meta.primary_leaderboard;
@@ -195,30 +126,14 @@
 			for (var i in leaderboard) {
 				if (leaderboard[i].node == streamnode) {
 					found_streamnode = true;
-
-
-
-					pilot_data = leaderboard[i];
-					var pilotName = pilot_data.callsign;
-
-					
-					//setPilotImage(pilotName);
-					
-					if (primary_leaderboard == 'by_fastest_lap') {
-						rank_stat = pilot_data.fastest_lap
-					} else if (primary_leaderboard == 'by_consecutives') {
-						rank_stat = pilot_data.consecutives
-					} else {
-						rank_stat = pilot_data.laps + " / " + pilot_data.total_time
-					}
-
-					$('#rank_stat').html(rank_stat);
 					break;
 				}
 			}
 
 			if (!found_streamnode) {
-				document.getElementById('pilot-info').style.visibility = 'hidden';
+				//hidePilotCard();
+			}else{
+				showPilotCard();
 			}
 		});
 
@@ -236,7 +151,7 @@
 </style>
 {% endblock %} {% block content %}
 <main class="page-streamnode">
-	<div class="pilot-card animated animatedFadeInUp fadeInUp">
+	<div class="pilot-card">
 		<div class="pilot-card-picture">
 			<div class="pilot-card-picture-color">
 				<img class="pilot-picture" src="/pilotphotos/static/images/unknown_pilot.jpg" onerror="this.onerror=null;this.src='/pilotphotos/static/images/unknown_pilot.jpg';">

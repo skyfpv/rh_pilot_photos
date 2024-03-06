@@ -14,19 +14,18 @@
 
 @-webkit-keyframes fadeInUp {
     from {
-        transform: translate3d(0,40px,0)
+        transform: translate3d(0,40px,0);
     }
 
     to {
         transform: translate3d(0,0,0);
-        opacity: 1
+        opacity: 1;
     }
 }
 
 .animated {
     animation-duration: 1s;
     animation-fill-mode: both;
-    animation-delay: 500ms;
 }
 
 .animatedFadeInUp {
@@ -88,6 +87,10 @@ html {
 	--pilot_contrast_color: white;
 }
 
+.pilot-card {
+    visibility: hidden;
+}
+
 .pilot-card-picture {
 	background: linear-gradient(336deg, rgba(0,0,0,1) 0%, rgba(170,170,170,1) 46%, rgba(0,0,0,1) 100%);
 	padding: 10px;
@@ -95,7 +98,7 @@ html {
 }
 
 .pilot-card-picture-color {
-	background: linear-gradient(-50deg, var(--pilot_second_color) 50%, var(--pilot_color) 50%);
+	background: linear-gradient(-50deg, var(--pilot_second_color) 50%, var(--pilot_color) 50.5%);
     color: #fff;
 	padding: 10px;
 	border-radius: 20px;
@@ -116,7 +119,7 @@ html {
 	left: -10px;
 	width: 400px;
 	padding: 10px;
-	background: linear-gradient(145deg, var(--pilot_second_color) 0%, var(--pilot_second_color) 20%, rgba(0,0,0,0) 20%, rgba(0,0,0,0) 80%, var(--pilot_color) 80%, var(--pilot_color) 100%);
+	background: linear-gradient(145deg, var(--pilot_second_color) 0%, var(--pilot_second_color) 20%, rgba(0,0,0,0) 20.5%, rgba(0,0,0,0) 80%, var(--pilot_color) 80.5%, var(--pilot_color) 100%);
 	border-radius: 30px;
 }
 
@@ -130,8 +133,12 @@ html {
 	padding: 20px 15px 20px 15px;
 	border-radius: 20px;
 	color: var(--pilot_contrast_color);
-	font-size: 42px;
+	font-size: 48px;
 	text-align: center;
+    height: 60px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
 
