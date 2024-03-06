@@ -95,7 +95,8 @@ class RUManager():
             self.sendPhotoURLByPilotId(pilotId, node)
 
     def sendPhotoURLByPilotId(self, pilotId, node):
-        pilotPhotoURL = self.rhapi.db.pilot_attribute_value(pilotId, PILOT_URL_FIELD_NAME, default_value="/pilotphotos/static/images/unknown_pilot.jpg")
+        #pilotPhotoURL = self.rhapi.db.pilot_attribute_value(pilotId, PILOT_URL_FIELD_NAME, default_value="/pilotphotos/static/images/unknown_pilot.jpg")
+        pilotPhotoURL = self.rhapi.db.pilot_attribute_value(pilotId, PILOT_URL_FIELD_NAME)
         log(pilotPhotoURL)
         pilot = self.rhapi.db.pilot_by_id(pilotId)
         if(pilot!=None):
