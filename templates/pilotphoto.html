@@ -52,9 +52,8 @@
 			if(msg.node==streamnode) {
 				console.log("got pilot photo");
 				console.log(msg);
-				setPilotImageURL(msg.callsign, msg.url);
+				setPilotImageURL(msg.callsign, msg.url, msg.secondaryColor);
 			}
-
 		});
 
 		socket.on('current_laps', function (msg) {
@@ -121,7 +120,7 @@
 		}
 
 		function setPilotImage(pilotName){
-			var callsign = pilotName.toLowerCase();
+			var callsign = pilotName;
 			if(callsign!=null){
 
 				var pilotPicURL = 'https://res.cloudinary.com/street-league-spec/image/upload/c_thumb,h_380,w_380/pilot-photos/'+callsign;
@@ -146,12 +145,12 @@
 
 				$('#pilot-info').css('visibility', 'visible');
 				$('.pilot-picture').attr('src', pilotPicURL);
-				$('#callsign').html(callsign).css("font-size", "60px");
+				$('.callsign').html(callsign).css("font-size", "60px");
 				}
 		}
 
-		function setPilotImageURL(pilotName, imageURL){
-			var callsign = pilotName.toLowerCase();
+		function setPilotImageURL(pilotName, imageURL, secondaryColor){
+			var callsign = pilotName;
 			if(callsign!=null){
 
 				var pilotPicURL = imageURL;
@@ -174,9 +173,14 @@
 					console.log("could not find pilot profile picture for "+callsign);
 				});
 
+
+				$('html').css('--pilot_second_color', secondaryColor);
+
+
+
 				$('#pilot-info').css('visibility', 'visible');
 				$('.pilot-picture').attr('src', pilotPicURL);
-				$('#callsign').html(callsign).css("font-size", "60px");
+				$('.callsign').html(callsign).css("font-size", "60px");
 				}
 		}
 
@@ -232,9 +236,17 @@
 </style>
 {% endblock %} {% block content %}
 <main class="page-streamnode">
-	<div id="pilot-info">
-		<img src="/pilotphotos/static/images/unknown_pilot.jpg" onerror="this.onerror=null;this.src='/pilotphotos/static/images/unknown_pilot.jpg';" class="pilot-picture">
-		<div id="callsign"></div>
+	<div class="pilot-card animated animatedFadeInUp fadeInUp">
+		<div class="pilot-card-picture">
+			<div class="pilot-card-picture-color">
+				<img class="pilot-picture" src="/pilotphotos/static/images/unknown_pilot.jpg" onerror="this.onerror=null;this.src='/pilotphotos/static/images/unknown_pilot.jpg';">
+			</div>
+		</div>
+		<div class="pilot-card-name">
+			<div class="pilot-card-name-color">
+				<div class="callsign"></div>
+			</div>
+		</div>
 	</div>
 </main>
 {% endblock %}

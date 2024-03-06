@@ -7,6 +7,7 @@ from RHRace import RaceStatus
 from flask.blueprints import Blueprint
 from flask import Flask, templating
 from eventmanager import Evt
+import re
 
 def __(str):
     return ""
@@ -21,6 +22,7 @@ VERSION_MINOR = 0
 DEBUG_LOGGING = False
 
 #default values
+PILOT_SECONDARY_COLOR_FIELD_NAME = "PilotSecondaryColor"
 PILOT_URL_FIELD_NAME = "PilotDetailPhotoURL"
 
 def log(message):
@@ -60,8 +62,10 @@ def initialize(rhapi):
     rhapi.ui.blueprint_add(bp)
     
     #data attributes
+    pilotSecondaryColor = UIField(name = PILOT_SECONDARY_COLOR_FIELD_NAME, label = "Secondary Color", field_type = UIFieldType.TEXT, desc = "hex color. E.G. #ff0000")
     pilotPhotoUrl = UIField(name = PILOT_URL_FIELD_NAME, label = "Pilot Photo URL", field_type = UIFieldType.TEXT)
     rhapi.fields.register_pilot_attribute(pilotPhotoUrl)
+    rhapi.fields.register_pilot_attribute(pilotSecondaryColor)
     
     log("pilot detail plugin initialized")
 
@@ -95,11 +99,35 @@ class RUManager():
             self.sendPhotoURLByPilotId(pilotId, node)
 
     def sendPhotoURLByPilotId(self, pilotId, node):
-        pilotPhotoURL = self.rhapi.db.pilot_attribute_value(pilotId, PILOT_URL_FIELD_NAME, default_value="/pilotphotos/static/images/unknown_pilot.jpg")
+        pilotPhotoURL = self.rhapi.db.pilot_attribute_value(pilotId, PILOT_URL_FIELD_NAME)
+        secondaryColor = self.rhapi.db.pilot_attribute_value(pilotId, PILOT_SECONDARY_COLOR_FIELD_NAME)
+        
+        #if the secondary color is invalid, use the primary color
+        if(self.isValidHexColor(secondaryColor)==False):
+            seatColor = self.rhapi.race.seat_colors[node]
+            seatColor = self.colorToHex(seatColor)
+            secondaryColor = seatColor
+        
         log(pilotPhotoURL)
         pilot = self.rhapi.db.pilot_by_id(pilotId)
         if(pilot!=None):
             callsign = pilot.callsign
-            body = {"callsign":callsign, "url": pilotPhotoURL, "node": node}
+            body = {"callsign":callsign, "url": pilotPhotoURL, "node": node, "secondaryColor": secondaryColor}
             log("-> "+str(body))
             self.rhapi.ui.socket_broadcast("pilot_photo", body)
+
+    def colorToHex(self, colorInt):
+        return '#' + format(colorInt, '06x')
+    
+    def isValidHex(self, string):
+        pattern = re.compile(r'^[a-fA-F0-9#]+$')
+        return bool(pattern.match(string))
+    
+    def isValidHexColor(self, color):
+        valid = True
+        if(color==None):
+            valid = False
+        else:
+            if(len(color)!=7) or (self.isValidHex(color)==False):
+                valid = False
+        return valid

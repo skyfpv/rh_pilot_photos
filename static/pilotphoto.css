@@ -1,78 +1,142 @@
-@font-face {
-    font-family: 'Barlow';
-    font-style: normal;
-    font-weight: 400;
-    src: local(''),
-        url('fonts/BarlowRH-Light.woff2') format('woff2'),
-        url('fonts/BarlowRH-Light.woff') format('woff');
+
+/* Animation */
+
+@keyframes fadeInUp {
+    from {
+        transform: translate3d(0,40px,0)
+    }
+
+    to {
+        transform: translate3d(0,0,0);
+        opacity: 1
+    }
+}
+
+@-webkit-keyframes fadeInUp {
+    from {
+        transform: translate3d(0,40px,0)
+    }
+
+    to {
+        transform: translate3d(0,0,0);
+        opacity: 1
+    }
+}
+
+.animated {
+    animation-duration: 1s;
+    animation-fill-mode: both;
+    animation-delay: 500ms;
+}
+
+.animatedFadeInUp {
+    opacity: 0
+}
+
+.fadeInUp {
+    opacity: 0;
+    animation-name: fadeInUp;
 }
 
 @font-face {
-font-family: 'Barlow';
-font-style: italic;
-font-weight: 400;
-src: local(''),
-        url('fonts/Barlow-LightItalic.woff2') format('woff2'),
-        url('fonts/Barlow-LightItalic.woff') format('woff');
+  font-family: 'Barlow';
+  font-style: italic;
+  font-weight: 400;
+  src: local(''),
+       url('fonts/Barlow-LightItalic.woff2') format('woff2'),
+       url('fonts/Barlow-LightItalic.woff') format('woff');
 }
 
 @font-face {
-font-family: 'Barlow';
-font-style: normal;
-font-weight: 700;
-src: local(''),
-        url('fonts/BarlowRH-Bold.woff2') format('woff2'),
-        url('fonts/BarlowRH-Bold.woff') format('woff');
+  font-family: 'Barlow';
+  font-style: normal;
+  font-weight: 700;
+  src: local(''),
+       url('fonts/BarlowRH-Bold.woff2') format('woff2'),
+       url('fonts/BarlowRH-Bold.woff') format('woff');
 }
 
 @font-face {
-font-family: 'Barlow';
-font-style: italic;
-font-weight: 700;
-src: local(''),
-        url('fonts/Barlow-BoldItalic.woff2') format('woff2'),
-        url('fonts/Barlow-BoldItalic.woff') format('woff');
+  font-family: 'Barlow';
+  font-style: italic;
+  font-weight: 700;
+  src: local(''),
+       url('fonts/Barlow-BoldItalic.woff2') format('woff2'),
+       url('fonts/Barlow-BoldItalic.woff') format('woff');
 }
 
 html {
-    background: transparent;
-    color: #000;
-    margin: 0;
-    padding: 0;
-    font-family: 'Barlow', sans-serif;
-    font-variant-numeric: tabular-nums;
-    font-weight: 700;
+	background: transparent;
+	color: #000;
+	margin: 0;
+	padding: 0;
+	font-family: 'Barlow', sans-serif;
+	font-variant-numeric: tabular-nums;
+	font-weight: 700;
 }
 
 body {
-    font-size: 1.2em;
-    margin: 0;
-    padding: 0;
+	font-size: 1.2em;
+	margin: 1rem;
+	padding: 1rem;
+	width: 400px;
 }
 
+html {
+	--pilot_color: white;
+	--pilot_second_color: white;
+	--pilot_contrast_color: white;
+}
 
-#pilot-info {
-    background: hsl(212.7, 67.8%, 29.2%);
+.pilot-card-picture {
+	background: linear-gradient(336deg, rgba(0,0,0,1) 0%, rgba(170,170,170,1) 46%, rgba(0,0,0,1) 100%);
+	padding: 10px;
+	border-radius: 30px;
+}
+
+.pilot-card-picture-color {
+	background: linear-gradient(-50deg, var(--pilot_second_color) 50%, var(--pilot_color) 50%);
     color: #fff;
-    background: var(--pilot_color);
-    color: var(--contrast_pilot_color);
-    font-size: 2.5rem;
-    line-height: 1;
-    padding: 0.25em;
-    bottom: 0;
+	padding: 10px;
+	border-radius: 20px;
+	position: relative;
 }
 
-#callsign {
-    flex: 1 1 auto;
-    margin-right: 1rem;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    display: block;
+.pilot-card-picture img {
+	object-fit: cover;
+	object-position: center top;
+	height: 360px;
+	width: 360px;
+	border-radius: 10px;
 }
 
-.pilot-picture {
-    object-fit: cover;
-    object-position: center top;
-    height: 380px;
-    width: 380px;
+.pilot-card-name {
+	position: relative;
+	top: -55px;
+	left: -10px;
+	width: 400px;
+	padding: 10px;
+	background: linear-gradient(145deg, var(--pilot_second_color) 0%, var(--pilot_second_color) 20%, rgba(0,0,0,0) 20%, rgba(0,0,0,0) 80%, var(--pilot_color) 80%, var(--pilot_color) 100%);
+	border-radius: 30px;
 }
+
+.pilot-card-name-color {
+	padding: 0px;
+	border-radius: 20px;
+}
+
+.callsign {
+	background: linear-gradient(336deg, rgba(0,0,0,1) 0%, rgba(70,70,70,1) 46%, rgba(0,0,0,1) 100%);
+	padding: 20px 15px 20px 15px;
+	border-radius: 20px;
+	color: var(--pilot_contrast_color);
+	font-size: 42px;
+	text-align: center;
+}
+
+
+
+
+
+
+ 
