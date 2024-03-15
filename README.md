@@ -1,4 +1,4 @@
-# Rotorhazard Pilot Photos
+# RotorHazard Pilot Photos
 A RotorHazard plugin which adds a pilot card stream element which showcases a photo and both primary and optional secondary color
 
 ## Help your livestream viewers put faces to names
@@ -6,7 +6,7 @@ A RotorHazard plugin which adds a pilot card stream element which showcases a ph
 use the url http://rotorhazard.local/stream/pilotphoto/1 to view the first pilot card
 ## Easy setup via new pilot attributes
 ![alt text](https://github.com/skyfpv/rh_pilot_photos/blob/main/docs/images/pilotAttributes.jpg?raw=true)
-## Set up in OBS works just like any other rotorhazard stream element
+## Set up in OBS works just like any other RotorHazard stream element
 
 ![alt text](https://github.com/skyfpv/rh_pilot_photos/blob/main/docs/images/streamElementsExample2.jpg?raw=true)
 Create a browser source and use the url http://rotorhazard.local/stream/pilotphoto/[DESIRED_NODE_NUMBER] to show the card for each of the available nodes. Create browser source per pilot card. 
