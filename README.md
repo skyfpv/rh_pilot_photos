@@ -15,4 +15,4 @@ We recommend the following settings for the browser source.
 - height: 600
 - enable "Shutdown source when not visible"
 - enable "Refresh browser when scene becomes active"
-- custom CSS: default is fine. Optionally you can add ".animated { animation-delay:500ms; }" in order to delay the fade-in animation. This can create a nice effect when each pilot is faded in sequencially.
+- custom CSS: default is fine. Optionally you can add ".animated { animation-delay:500ms; }" in order to delay the fade-in animation. This can create a nice effect when each pilot is faded in sequentially.
