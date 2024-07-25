@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 
 #Version
 VERSION_MAJOR = 1
-VERSION_MINOR = 0
+VERSION_MINOR = 1
 
 #Logging
 DEBUG_LOGGING = False
@@ -58,7 +58,7 @@ def initialize(rhapi):
     def bp_test_page(node_id):
         #return render_template('pilotcard.html', __=__,)
         return render_template('pilotphoto.html', serverInfo=None,
-            getOption=rhapi.db.option, __=rhapi.__, node_id=node_id-1)
+            getConfig=rhapi.config.get_item, __=rhapi.__, node_id=node_id-1)
     rhapi.ui.blueprint_add(bp)
     
     #data attributes
