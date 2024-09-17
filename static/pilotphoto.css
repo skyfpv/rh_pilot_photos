@@ -23,6 +23,10 @@
     }
 }
 
+.pilot-picture {
+    background: #222222;
+}
+
 .animated {
     animation-duration: 1s;
     animation-fill-mode: both;
